@@ -1,0 +1,4 @@
+python-dotenv==1.0.0
+google-cloud-speech==2.21.0
+pydub==0.25.1
+deep-translator==1.11.4
