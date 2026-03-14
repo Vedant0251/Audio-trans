@@ -1,10 +1,10 @@
 # Audio to Text Translation
 
-This project provides tools to transcribe audio files to text using Google Cloud Speech-to-Text and translate them into English.
+This project provides tools to transcribe audio files to text using **OpenAI Whisper (Free & Local)** and translate them into English.
 
 ## Features
-- Speech-to-Text (ASR) support for multiple languages (Hindi, Marathi, Odia, Gujarati, etc.).
-- Speaker diarization (detecting different speakers).
+- Speech-to-Text (ASR) support for multiple languages (Hindi, Marathi, Odia, Gujarati, etc.) using OpenAI Whisper.
+- Runs locally on your machine—no API keys or costs required for transcription.
 - Automatic translation to English using `deep-translator`.
 - Supports various audio formats (wav, mp3, m4a).
 
@@ -15,13 +15,8 @@ This project provides tools to transcribe audio files to text using Google Cloud
    pip install -r requirements.txt
    ```
 
-2. **Google Cloud Credentials**:
-   - Obtain a Google Cloud service account key JSON file.
-   - Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path of your JSON file.
-   - You can use the provided `.env.example` as a template for your `.env` file.
-
-3. **Audio Processing (FFmpeg)**:
-   - This project uses `pydub`, which requires FFmpeg to be installed on your system.
+2. **Audio Processing (FFmpeg)**:
+   - This project uses `pydub` and `whisper`, both of which require FFmpeg to be installed on your system.
 
 ## Usage
 
@@ -41,8 +36,11 @@ Options:
 You can also use `asr.py` directly for transcription:
 
 ```bash
-python asr.py --input audio/sample_hindi.wav --lang hi --diarize
+python asr.py --input audio/sample_hindi.wav --lang hi --model base
 ```
+
+Options:
+- `--model`: Whisper model size (`tiny`, `base`, `small`, `medium`, `large`). Default is `base`.
 
 ### Translate Only
 Use `translator.py` for text translation:

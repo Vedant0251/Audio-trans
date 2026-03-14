@@ -1,10 +1,10 @@
 import argparse
 import os
 from pathlib import Path
-from asr import transcribe_audio_google
+from asr import transcribe_audio_whisper
 from translator import translate_text
 
-def process_audio(file_path: str, language: str = "hi", translate: bool = True):
+def process_audio(file_path: str, language: str = "hi", translate: bool = True, model_size: str = "base"):
     """Full pipeline: ASR -> Optional Translation."""
     if not os.path.exists(file_path):
         print(f"Error: File '{file_path}' not found.")
@@ -13,16 +13,13 @@ def process_audio(file_path: str, language: str = "hi", translate: bool = True):
     print(f"--- Processing: {file_path} ---")
     
     # 1. Transcribe audio (ASR)
-    print(f"Transcribing (Language: {language})...")
+    print(f"Transcribing (Language: {language}, Model: {model_size})...")
     try:
-        transcript, speaker_count = transcribe_audio_google(file_path, language=language)
+        transcript, speaker_count = transcribe_audio_whisper(file_path, language=language, model_size=model_size)
         
         print("\n--- Original Transcript ---")
         print(transcript)
         
-        if speaker_count is not None:
-            print(f"Detected {speaker_count} speakers.")
-            
         # 2. Translate if requested and language is not English
         if translate and language.lower() not in ["en", "en-us"]:
             print(f"\nTranslating to English...")
@@ -42,8 +39,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Audio to Text Translation Pipeline.")
     parser.add_argument("--input", required=True, help="Path to audio file (wav, mp3, m4a, etc.)")
     parser.add_argument("--lang", default="hi", help="Language code (hi, mr, or, etc.)")
+    parser.add_argument("--model", default="base", help="Whisper model size (tiny, base, small, medium, large)")
     parser.add_argument("--no-translate", action="store_true", help="Disable translation to English")
     
     args = parser.parse_args()
     
-    process_audio(args.input, language=args.lang, translate=not args.no_translate)
+    process_audio(args.input, language=args.lang, translate=not args.no_translate, model_size=args.model)
