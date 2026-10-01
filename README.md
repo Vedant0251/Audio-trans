@@ -1,64 +1,140 @@
-# Audio to Text Translation
+# Audio-Trans AI Pipeline 🚀
 
-This project provides tools to transcribe audio files to text using **OpenAI Whisper (Free & Local)** and translate them into English.
+Welcome to **Audio-Trans AI Pipeline**, an intelligent full-stack project that transforms spoken audio into text, translates it seamlessly, evaluates business ideas using an LLM, and generates a Business Model Canvas (BMC). 
 
-## Features
-- Speech-to-Text (ASR) support for multiple languages (Hindi, Marathi, Odia, Gujarati, etc.) using OpenAI Whisper.
-- Runs locally on your machine—no API keys or costs required for transcription.
-- Automatic translation to English using `deep-translator`.
-- Supports various audio formats (wav, mp3, m4a).
+This tool is designed for founders, entrepreneurs, and note-takers to immediately analyze their audio recordings, translating regional languages and returning actionable startup insights.
 
-## Setup
+## ✨ Features
 
-1. **Install Dependencies**:
+- **Local Speech-to-Text (ASR):** Uses **OpenAI Whisper** for local, free, and accurate transcription.
+- **Auto-Translation:** Translates Hindi/Regional languages to English or English to Hindi using `deep-translator`.
+- **Startup Idea Evaluator:** Evaluates pitch/audio transcripts leveraging LLMs (Google Generative AI) to provide constructive feedback, pros/cons, and next steps for the business idea.
+- **Business Model Canvas Generator (BMC):** Automatically structure your transcript into a standard JSON/PNG Business Model Canvas.
+- **Robust Backend APIs:** Fully functional REST APIs powered by **FastAPI**.
+- **Interactive Frontend UI:** A modern web client built with **React** and **Vite**.
+
+---
+
+## 🛠️ Tech Stack
+
+### **Backend**
+- **Python 3.10+**
+- **FastAPI / Uvicorn:** For high-performance backend serving and API management.
+- **OpenAI Whisper:** Locally run ASR inference.
+- **Google Generative AI (Gemini):** Used for idea evaluation and intelligence.
+- **Deep Translator:** Open-source translation support.
+
+### **Frontend**
+- **React (Vite)**
+- **Tailwind CSS / Vanilla CSS**
+- **Axios** (for API communication)
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Prerequisites
+- **Python 3.10+** (A virtual environment is recommended)
+- **Node.js** (v16+)
+- **FFmpeg** (Required by `pydub` and `whisper` to process audio files)
+
+### 2. Backend Setup
+Navigate to the root directory and install Python dependencies:
+```bash
+# Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your Google Gemini API Key and other necessary keys.
+```
+
+### 3. Frontend Setup
+Navigate to the `frontend` directory:
+```bash
+cd frontend
+npm install
+```
+
+---
+
+## 🚀 Usage
+
+### Option A: Running the Web Application (Recommended)
+
+1. **Start the Backend Server (FastAPI):**
    ```bash
-   pip install -r requirements.txt
+   python app.py
    ```
+   > The API server will start on `http://localhost:8000`. Swagger UI is available at `http://localhost:8000/docs`.
 
-2. **Audio Processing (FFmpeg)**:
-   - This project uses `pydub` and `whisper`, both of which require FFmpeg to be installed on your system.
+2. **Start the Frontend Application:**
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+   > The web app will be accessible via `http://localhost:5173`.
 
-## Usage
+### Option B: Running the CLI Pipeline
 
-### Run the Pipeline
-Use the `main.py` script to transcribe and translate an audio file:
+You can run the full toolchain directly from your terminal using `main.py`.
 
 ```bash
-python main.py --input audio/sample_hindi.wav --lang hi
+python main.py --input audio/sample_hindi.wav --lang hi --model base
 ```
 
-Options:
-- `--input`: Path to the audio file.
-- `--lang`: Language code (e.g., `hi`, `mr`, `or`, `gu`, `en`).
+**CLI Flags:**
+- `--input`: Path to the audio file (required).
+- `--lang`: Language code (`hi`, `en`, `mr`, etc., default: `hi`).
+- `--model`: Whisper model size (`tiny`, `base`, `small`, `medium`, `large`). default: `base`.
 - `--no-translate`: Disable translation to English.
+- `--no-evaluate`: Disable business idea evaluation and BMC generation.
 
-### Transcribe Only
-You can also use `asr.py` directly for transcription:
+### Individual Python Modules
+- **Transcribe only:** `python asr.py --input audio/sample.wav --lang hi`
+- **Translate only:** `python translator.py --text "नमस्ते" --source hi --target en`
 
-```bash
-python asr.py --input audio/sample_hindi.wav --lang hi --model base
+---
+
+## 📡 API Endpoints
+
+The FastAPI backend exposes the following key endpoints:
+
+- `GET /api/health` - Check if the API is running.
+- `POST /api/process` - Upload an audio file, returns transcript & detected language.
+- `POST /api/translate` - Translates text between Hindi and English.
+- `POST /api/generate_bmc` - Returns a JSON Business Model Canvas representation of an idea.
+- `POST /api/evaluate` - Evaluates a startup idea from text and returns actionable insights.
+
+---
+
+## 📂 Project Structure
+
+```
+Audio-trans/
+├── app.py                # FastAPI web server and endpoints
+├── main.py               # CLI tool for full pipeline execution
+├── asr.py                # Whisper ASR transcription logic
+├── translator.py         # Text translation utilities
+├── evaluator.py          # Startup evaluation logic (Gemini)
+├── bmc.py                # Business Model Canvas (BMC) generator
+├── requirements.txt      # Python dependencies
+├── .env.example          # Environment variables template
+├── frontend/             # React (Vite) web application
+│   ├── src/              # UI components and pages
+│   ├── package.json      # Node dependencies
+│   └── vite.config.js    # Vite configuration
+├── audio/                # Source audio files (Sample inputs)
+├── transcripts/          # Output textual transcripts and reports
+└── uploads/              # Temporary audio uploads folder
 ```
 
-Options:
-- `--model`: Whisper model size (`tiny`, `base`, `small`, `medium`, `large`). Default is `base`.
+---
 
-### Translate Only
-Use `translator.py` for text translation:
-
-```bash
-python translator.py --text "नमस्ते" --source hi --target en
-```
-
-## Supported Languages
-- English (`en`)
-- Hindi (`hi`)
-- Marathi (`mr`)
-- Odia (`or`)
-- Gujarati (`gu`)
-- Bengali (`bn`)
-- Tamil (`ta`)
-- Telugu (`te`)
-- Kannada (`kn`)
-- Malayalam (`ml`)
-- Punjabi (`pa`)
-- Urdu (`ur`)
+## 🌍 Supported Languages (Speech-to-Text)
+The local Whisper setup natively supports multiple languages including, but not limited to:
+English (`en`), Hindi (`hi`), Marathi (`mr`), Odia (`or`), Gujarati (`gu`), Bengali (`bn`), Tamil (`ta`), Telugu (`te`), Kannada (`kn`), Malayalam (`ml`), Punjabi (`pa`), Urdu (`ur`).

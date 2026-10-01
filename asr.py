@@ -86,7 +86,10 @@ def transcribe_audio_whisper(
     print("Transcribing...")
     result = model.transcribe(wav_path, language=language_code)
     
-    return result["text"].strip(), None
+    # Extract detected language
+    detected_lang = result.get("language")
+    
+    return result["text"].strip(), detected_lang
 
 
 if __name__ == "__main__":

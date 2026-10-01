@@ -1,7 +1,14 @@
 python-dotenv==1.0.0
 pydub==0.25.1
 deep-translator==1.11.4
-openai-whisper==20231117
+openai-whisper
 torch
 torchvision
 torchaudio
+google-generativeai
+google-cloud-vision
+pillow
+termcolor
+fastapi
+uvicorn
+python-multipart
